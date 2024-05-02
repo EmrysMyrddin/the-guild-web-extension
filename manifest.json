@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "The Guild Helper",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["src/content_script.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "host_permissions": [
+    "https://github.com/",
+    "https://notion-tasks-dashboard-proxy.theguild.workers.dev/"
+  ],
+  "permissions": ["storage"],
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": false
+  }
+}
