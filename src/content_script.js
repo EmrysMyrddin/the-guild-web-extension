@@ -1,7 +1,7 @@
 window.navigation.addEventListener("navigate", async () => {
   if (
     location.pathname.includes("/issues/") ||
-    location.pathname.split("/pull/")
+    location.pathname.includes("/pull/")
   ) {
     if (document.querySelector(".the-guild__open-in-notion")) {
       return;
