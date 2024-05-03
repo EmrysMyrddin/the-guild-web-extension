@@ -10,6 +10,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+chrome.runtime.onInstalled.addListener(async (activeInfo) => {
+  console.debug("Extension installed", activeInfo);
+  const hasPermissions = await chrome.permissions.contains({
+    origins: [
+      "https://github.com/*",
+      "https://notion-tasks-dashboard-proxy.theguild.workers.dev/*",
+    ],
+  });
+  if (!hasPermissions) {
+    console.debug("Requesting permissions");
+    await chrome.permissions.request({
+      origins: [
+        "https://github.com",
+        "https://notion-tasks-dashboard-proxy.theguild.workers.dev",
+      ],
+    });
+  }
+  console.debug("Permissions granted");
+});
+
+console.debug("Background script loaded");
+
 /**
  * Search for the associated task in Notion
  * @param {string} url The Github URL that should be present in "External Link" Notion task property

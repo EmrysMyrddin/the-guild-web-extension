@@ -1,4 +1,4 @@
-window.navigation.addEventListener("navigate", async () => {
+async function onUrlChanged() {
   if (
     location.pathname.includes("/issues/") ||
     location.pathname.includes("/pull/")
@@ -15,6 +15,11 @@ window.navigation.addEventListener("navigate", async () => {
     if (!tracked) {
       // We are not in a tracked repository, so we don't want to alter the page
       console.debug("Not a tracked repository, skipping");
+      return;
+    }
+
+    if (document.querySelector(".the-guild__open-in-notion")) {
+      // Check again in case there was multiple navigation events in a short period
       return;
     }
 
@@ -52,4 +57,15 @@ window.navigation.addEventListener("navigate", async () => {
       stickyHeader.appendChild(notionButton.cloneNode(true));
     }
   }
-});
+}
+
+console.debug("Content script loaded");
+let oldHref = document.location.href;
+const observer = new MutationObserver(() => {
+  if (oldHref !== document.location.href) {
+    console.debug("URL changed", document.location.href);
+    oldHref = document.location.href;
+    onUrlChanged().catch(console.error);
+  }
+}).observe(document.querySelector("body"), { childList: true, subtree: true });
+onUrlChanged().catch(console.error);

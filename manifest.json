@@ -9,7 +9,8 @@
     }
   ],
   "background": {
-    "service_worker": "src/background.js"
+    "service_worker": "src/background.js",
+    "scripts": ["src/background.js"]
   },
   "host_permissions": [
     "https://github.com/",
