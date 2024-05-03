@@ -1,17 +1,22 @@
-console.log("Hello from content_script.js!");
-console.log(location.pathname);
-
 window.navigation.addEventListener("navigate", async () => {
-  const issueNumber = location.pathname.split("/issues/")[1];
-  if (issueNumber) {
+  if (
+    location.pathname.includes("/issues/") ||
+    location.pathname.split("/pull/")
+  ) {
     if (document.querySelector(".the-guild__open-in-notion")) {
       return;
     }
 
-    const { notionUrl, error } = await chrome.runtime.sendMessage({
-      type: "searchIssueTask",
-      issueURL: location.href,
+    const { notionURL, error, tracked } = await chrome.runtime.sendMessage({
+      type: "searchTaskFromGithubURL",
+      url: location.href,
     });
+
+    if (!tracked) {
+      // We are not in a tracked repository, so we don't want to alter the page
+      console.debug("Not a tracked repository, skipping");
+      return;
+    }
 
     const header = document.querySelector(
       "#partial-discussion-header .gh-header-meta"
@@ -37,8 +42,14 @@ window.navigation.addEventListener("navigate", async () => {
       notionButton.className =
         "the-guild__open-in-notion Button--primary Button--small Button mb-2 ml-2";
       notionButton.target = "_blank";
-      notionButton.href = notionUrl;
+      notionButton.href = notionURL;
+
       header.appendChild(notionButton);
+
+      const stickyHeader = document.querySelector(
+        ".sticky-content > div > div"
+      );
+      stickyHeader.appendChild(notionButton.cloneNode(true));
     }
   }
 });
