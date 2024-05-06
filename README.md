@@ -9,7 +9,7 @@ Install the extension [here](https://chromewebstore.google.com/detail/the-guild-
 ### Manual installation
 
 - Clone the repository
-- Go to (about:extensions)[about:extensions]
+- Go to `about:extensions`
 - Enable developer mode in the upper right corner
 - Click on "Load unpacked extension"
 - Choose the directory where you cloned the repo
@@ -23,7 +23,7 @@ The firefox version is not published on the Firefox store yet.
 ### Manual installation
 
 - Clone the repository
-- Go to <a href="about:debugging#/runtime/this-firefox">about:debugging</a>
+- Go to `about:debugging#/runtime/this-firefox`
 - Click on "Load Temporary Add-on"
 - Choose the `manifest.json` file in the directory where you cloned the repository
 
