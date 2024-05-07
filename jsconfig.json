@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "target": "ESNext"
+  },
+  "include": ["src/**/*", "node_modules/chrome-types/*"]
+}
