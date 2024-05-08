@@ -1,3 +1,4 @@
+let retry = 0
 async function onUrlChanged() {
   if (
     location.pathname.includes('/issues/') ||
@@ -54,9 +55,16 @@ async function onUrlChanged() {
     if (status === 'not_found') {
       errorElement.textContent = 'Notion task not found'
       errorElement.style.color = 'var(--fgColor-severe)'
-      console.log('Notion task not found, retrying...')
-      errorElement.appendChild(loadingIndicator)
-      onUrlChanged().catch(console.error)
+      if (retry < 5) {
+        retry++
+        console.log(
+          `Notion task not found, retrying in 5s (${retry} retries) ...`,
+        )
+        errorElement.appendChild(loadingIndicator)
+        setTimeout(() => onUrlChanged().catch(console.error), 5000)
+      } else {
+        console.warn('Notion task not found, Max retries reached')
+      }
     } else {
       errorElement.textContent = error
       errorElement.style.color = 'var(--fgColor-danger)'
