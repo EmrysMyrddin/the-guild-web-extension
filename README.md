@@ -18,7 +18,8 @@ Install the extension [here](https://chromewebstore.google.com/detail/the-guild-
 
 ### From the Firefox Add-on Store
 
-The firefox version is not published on the Firefox store yet.
+Install the signed extension package from the (latest Release page)[https://github.com/EmrysMyrddin/the-guild-web-extension/releases/latest]. You can enable auto-updates to receive
+new versions automatically.
 
 ### Manual installation
 
