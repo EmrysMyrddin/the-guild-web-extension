@@ -1,27 +1,31 @@
 let retry = 0
+console.log('chrome', chrome.storage)
 async function onUrlChanged() {
   if (
     location.pathname.includes('/issues/') ||
     location.pathname.includes('/pull/')
   ) {
-    // We can check the cache in case the list of tracked libraries is available
-    const { trackedLibrariesURLs } = await chrome.storage.session.get(
-      'trackedLibrariesURLs',
-    )
-    if (trackedLibrariesURLs) {
-      if (trackedLibrariesURLs.some((url) => location.href.startsWith(url))) {
-        console.debug(
-          'Tracked repository, we can display a nice loading indicator',
-        )
-        const div = document.createElement('div')
-        div.className = 'mb-2 ml-2 text-bold d-flex flex-items-center'
-        div.style.height = '2em'
-        div.append(loadingIndicator)
-        insertLogo(div)
-        setContent(div)
-      } else {
-        console.debug('Not a tracked repository, skipping')
-        return
+    // session storage is not available in content scripts in firefox
+    if (chrome.storage.session) {
+      // We can check the cache in case the list of tracked libraries is available
+      const { trackedLibrariesURLs } = await chrome.storage.session.get(
+        'trackedLibrariesURLs',
+      )
+      if (trackedLibrariesURLs) {
+        if (trackedLibrariesURLs.some((url) => location.href.startsWith(url))) {
+          console.debug(
+            'Tracked repository, we can display a nice loading indicator',
+          )
+          const div = document.createElement('div')
+          div.className = 'mb-2 ml-2 text-bold d-flex flex-items-center'
+          div.style.height = '2em'
+          div.append(loadingIndicator)
+          insertLogo(div)
+          setContent(div)
+        } else {
+          console.debug('Not a tracked repository, skipping')
+          return
+        }
       }
     }
 

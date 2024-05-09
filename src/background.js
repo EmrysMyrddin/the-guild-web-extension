@@ -13,27 +13,29 @@ chrome.runtime.onMessage.addListener(
   },
 )
 
-chrome.runtime.onInstalled.addListener(async (activeInfo) => {
+chrome.runtime.onInstalled.addListener((activeInfo) => {
   console.debug('Extension installed', activeInfo)
-  const hasPermissions = await chrome.permissions.contains({
-    origins: [
-      'https://github.com/*',
-      'https://notion-tasks-dashboard-proxy.theguild.workers.dev/*',
-    ],
-  })
-  if (!hasPermissions) {
-    console.debug('Requesting permissions')
-    await chrome.permissions.request({
+  chrome.permissions
+    .contains({
       origins: [
-        'https://github.com',
-        'https://notion-tasks-dashboard-proxy.theguild.workers.dev',
+        'https://github.com/*',
+        'https://notion-tasks-dashboard-proxy.theguild.workers.dev/*',
       ],
     })
-  }
-  chrome.storage.session.setAccessLevel({
-    accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS',
-  })
+    .then(async (hasPermissions) => {
+      if (!hasPermissions) {
+        console.debug('Requesting permissions')
+        await chrome.permissions.request({
+          origins: [
+            'https://github.com',
+            'https://notion-tasks-dashboard-proxy.theguild.workers.dev',
+          ],
+        })
+      }
+    })
+    .catch(console.error)
   console.debug('Permissions granted')
+  return true
 })
 
 console.debug('Background script loaded')

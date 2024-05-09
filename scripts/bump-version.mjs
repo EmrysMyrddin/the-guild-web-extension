@@ -21,7 +21,7 @@ fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2))
 const firefoxUpdates = JSON.parse(
   fs.readFileSync('hosting/firefox/updates.json'),
 )
-firefoxUpdates['web-extension@the-guild.dev'].updates.unshift({
+firefoxUpdates.addons['web-extension@the-guild.dev'].updates.unshift({
   version: manifest.version,
   update_link: `https://github.com/EmrysMyrddin/the-guild-web-extension/releases/download/${manifest.version}/firefox.xpi`,
 })
