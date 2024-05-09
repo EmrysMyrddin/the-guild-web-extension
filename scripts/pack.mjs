@@ -7,6 +7,7 @@ const {
   background: { scripts, service_worker },
   ...manifest
 } = await JSON.parse(await fs.readFile('manifest.json'))
+const commitHash = await $`git rev-parse --short HEAD`
 
 await $`mkdir -p dist`
 await $`rm -rf dist/*`
@@ -19,7 +20,7 @@ await fs.writeFile(
   JSON.stringify({ ...manifest, background: { service_worker } }, null, 2),
 )
 cd('dist/chrome')
-await $`zip -r ../chrome.zip * -x "*.DS_Store"`
+await $`zip -r ../chrome-${commitHash}-${manifest.version}.zip * -x "*.DS_Store"`
 cd(root)
 
 // Firefox build
@@ -30,5 +31,5 @@ await fs.writeFile(
   JSON.stringify({ ...manifest, background: { scripts } }, null, 2),
 )
 cd('dist/firefox')
-await $`zip -r ../firefox.zip * -x "*.DS_Store"`
+await $`zip -r ../firefox-${commitHash}-${manifest.version}.zip * -x "*.DS_Store"`
 cd(root)
