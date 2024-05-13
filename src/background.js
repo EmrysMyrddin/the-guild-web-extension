@@ -27,14 +27,22 @@ chrome.runtime.onInstalled.addListener((activeInfo) => {
         console.debug('Requesting permissions')
         await chrome.permissions.request({
           origins: [
-            'https://github.com',
-            'https://notion-tasks-dashboard-proxy.theguild.workers.dev',
+            'https://github.com/*',
+            'https://notion-tasks-dashboard-proxy.theguild.workers.dev/*',
           ],
         })
       }
+      console.debug('Permissions granted')
     })
     .catch(console.error)
-  console.debug('Permissions granted')
+  if (chrome.storage.session.setAccessLevel) {
+    chrome.storage.session
+      .setAccessLevel({
+        accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS',
+      })
+      .then(() => console.log('Session Storage access level changed'))
+      .catch(console.error)
+  }
   return true
 })
 
